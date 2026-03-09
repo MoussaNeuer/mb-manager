@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Moussa Business Manager</title>
+    <title>Moussa Business Manager - Commandes Multi-articles</title>
     <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome 6 (gratuit) -->
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Manifest PWA -->
     <link rel="manifest" href="/manifest.json">
@@ -17,25 +17,13 @@
     <style>
         /* Animations personnalisées */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         @keyframes pulse {
@@ -82,10 +70,6 @@
             border-radius: 10px;
         }
         
-        ::-webkit-scrollbar-thumb:hover {
-            background: #006b32;
-        }
-        
         /* Style pour les inputs */
         input:focus, select:focus, textarea:focus {
             outline: none;
@@ -108,12 +92,7 @@
             100% { transform: rotate(360deg); }
         }
         
-        /* Transitions fluides */
-        .page-transition {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        
-        /* Style pour iPhone */
+        /* Safe area pour iPhone */
         .safe-area-bottom {
             padding-bottom: env(safe-area-inset-bottom, 1rem);
         }
@@ -123,6 +102,147 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
+        
+        /* Badge de couleur */
+        .color-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        /* Grille de couleurs */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 12px;
+        }
+        
+        .color-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.05);
+        }
+        
+        .color-option.selected {
+            border-color: #00853F;
+            background: rgba(0, 133, 63, 0.1);
+        }
+        
+        /* Image placeholder */
+        .product-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .product-image:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Animation de chargement des images */
+        .image-loading {
+            filter: blur(10px);
+            opacity: 0.5;
+            transition: all 0.3s;
+        }
+        
+        .image-loaded {
+            filter: blur(0);
+            opacity: 1;
+        }
+        
+        /* Style pour les articles */
+        .article-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #00853F;
+            transition: all 0.3s;
+        }
+        
+        .article-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .remove-article {
+            opacity: 0.5;
+            transition: all 0.2s;
+        }
+        
+        .remove-article:hover {
+            opacity: 1;
+            color: #EF3340;
+            transform: scale(1.1);
+        }
+        
+        /* Badge de catégorie */
+        .category-badge {
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge-slimfit {
+            background: rgba(0, 133, 63, 0.1);
+            color: #00853F;
+        }
+        
+        .badge-compression {
+            background: rgba(239, 51, 64, 0.1);
+            color: #EF3340;
+        }
+        
+        /* Total commande */
+        .total-amount {
+            background: linear-gradient(135deg, #00853F, #EF3340);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+        
+        /* Style pour l'aperçu client */
+        .preview-card {
+            background: white;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased min-h-screen">
@@ -131,7 +251,7 @@
         <div class="text-center">
             <div class="loading-spinner mx-auto mb-4"></div>
             <p class="text-[#00853F] font-semibold">Moussa Business Manager</p>
-            <p class="text-sm text-gray-500 mt-2">Chargement...</p>
+            <p class="text-sm text-gray-500 mt-2">Gestion des commandes</p>
         </div>
     </div>
 
@@ -143,7 +263,7 @@
                 <div class="text-center mb-8">
                     <i class="fas fa-tshirt text-5xl text-[#EF3340] mb-3"></i>
                     <h1 class="text-2xl font-bold text-[#00853F]">Moussa Business</h1>
-                    <p class="text-gray-600 text-sm mt-1">Manager Pro</p>
+                    <p class="text-gray-600 text-sm mt-1">Manager Pro - Gestion des commandes</p>
                     <div class="flex justify-center space-x-2 mt-3">
                         <span class="w-8 h-1 bg-[#00853F] rounded-full"></span>
                         <span class="w-8 h-1 bg-[#FCD116] rounded-full"></span>
@@ -174,25 +294,18 @@
                     <i class="fas fa-shield-alt text-[#00853F] mr-1"></i> Accès privé - Administrateur uniquement
                 </div>
             </div>
-            
-            <!-- Drapeau Sénégal décoratif -->
-            <div class="flex justify-center mt-6 space-x-1 opacity-50">
-                <div class="w-6 h-6 bg-[#00853F] rounded-l-full"></div>
-                <div class="w-6 h-6 bg-[#FCD116]"></div>
-                <div class="w-6 h-6 bg-[#EF3340] rounded-r-full"></div>
-            </div>
         </div>
 
-        <!-- Application principale (cachée au départ) -->
+        <!-- Application principale -->
         <div id="main-app" class="hidden min-h-screen bg-gray-50">
-            <!-- Header avec couleurs du Sénégal -->
+            <!-- Header -->
             <div class="sticky top-0 z-10 glass-effect border-b border-gray-200 safe-area-bottom">
                 <div class="flex items-center justify-between p-4">
                     <div class="flex items-center space-x-2">
                         <i class="fas fa-tshirt text-2xl text-[#EF3340]"></i>
                         <div>
-                            <h1 class="text-xl font-bold text-[#00853F]">Moussa Biz</h1>
-                            <p class="text-xs text-gray-500">Manager</p>
+                            <h1 class="text-xl font-bold text-[#00853F]">MB Manager</h1>
+                            <p class="text-xs text-gray-500">Multi-articles</p>
                         </div>
                     </div>
                     <div class="flex items-center space-x-3">
@@ -213,19 +326,19 @@
                 </div>
             </div>
 
-            <!-- Contenu principal avec padding pour le header fixe -->
+            <!-- Contenu principal -->
             <div class="p-4 pb-24" id="main-content">
                 <!-- Section Stats -->
                 <div class="grid grid-cols-3 gap-3 mb-6 animate-fade-in-up">
                     <div class="bg-white rounded-xl p-3 shadow-md card-hover border-l-4 border-[#00853F]">
-                        <p class="text-xs text-gray-500">Total</p>
+                        <p class="text-xs text-gray-500">Commandes</p>
                         <p class="text-xl font-bold text-[#00853F]" id="total-orders">0</p>
-                        <p class="text-xs text-gray-400">commandes</p>
+                        <p class="text-xs text-gray-400">clients</p>
                     </div>
                     <div class="bg-white rounded-xl p-3 shadow-md card-hover border-l-4 border-[#FCD116]">
-                        <p class="text-xs text-gray-500">En cours</p>
-                        <p class="text-xl font-bold text-[#FCD116]" id="pending-orders">0</p>
-                        <p class="text-xs text-gray-400">livraison</p>
+                        <p class="text-xs text-gray-500">Articles</p>
+                        <p class="text-xl font-bold text-[#FCD116]" id="total-items">0</p>
+                        <p class="text-xs text-gray-400">vendus</p>
                     </div>
                     <div class="bg-white rounded-xl p-3 shadow-md card-hover border-l-4 border-[#EF3340]">
                         <p class="text-xs text-gray-500">Chiffre</p>
@@ -238,14 +351,14 @@
                 <div class="flex space-x-2 mb-6 animate-slide-in-right">
                     <div class="flex-1 relative">
                         <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        <input type="text" id="search-input" placeholder="Rechercher une commande..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340] transition-all bg-white shadow-sm">
+                        <input type="text" id="search-input" placeholder="Rechercher client ou téléphone..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340] transition-all bg-white shadow-sm">
                     </div>
                     <button id="add-order-btn" class="bg-gradient-to-r from-[#00853F] to-[#EF3340] text-white px-4 rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
 
-                <!-- Filtres par catégorie -->
+                <!-- Filtres rapides -->
                 <div class="flex space-x-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
                     <button class="filter-btn active px-4 py-2 bg-[#00853F] text-white rounded-full text-sm whitespace-nowrap" data-filter="all">Tous</button>
                     <button class="filter-btn px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap border border-gray-200" data-filter="slimfit">
@@ -259,8 +372,8 @@
                 </div>
 
                 <!-- Liste des commandes -->
-                <div id="orders-list" class="space-y-3">
-                    <!-- Les commandes seront injectées ici par JavaScript -->
+                <div id="orders-list" class="space-y-4">
+                    <!-- Les commandes seront injectées ici -->
                 </div>
 
                 <!-- Message si aucune commande -->
@@ -268,7 +381,7 @@
                     <i class="fas fa-box-open text-5xl text-gray-300 mb-3"></i>
                     <p class="text-gray-500">Aucune commande trouvée</p>
                     <button id="empty-add-btn" class="mt-3 text-[#00853F] font-semibold">
-                        <i class="fas fa-plus-circle mr-1"></i>Ajouter une commande
+                        <i class="fas fa-plus-circle mr-1"></i>Nouvelle commande
                     </button>
                 </div>
             </div>
@@ -296,7 +409,7 @@
             </div>
         </div>
 
-        <!-- Modal Ajout/Modification Commande -->
+        <!-- Modal Nouvelle Commande (Multi-articles) -->
         <div id="order-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
             <div class="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in-up">
                 <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
@@ -309,75 +422,61 @@
                 <form id="order-form" class="p-4 space-y-4">
                     <input type="hidden" id="order-id">
                     
+                    <!-- Informations client -->
+                    <div class="bg-blue-50 p-3 rounded-xl mb-4">
+                        <h3 class="font-semibold text-[#00853F] mb-2"><i class="fas fa-user mr-2"></i>Informations client</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet *</label>
+                                <input type="text" id="customer-name" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: Ousmane Diop">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone / WhatsApp *</label>
+                                <input type="tel" id="customer-phone" required class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: 77 123 45 67">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Adresse de livraison</label>
+                                <textarea id="delivery-address" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: Dakar, Parcelles Assainies..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Liste des articles -->
+                    <div class="bg-yellow-50 p-3 rounded-xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-semibold text-[#FCD116]"><i class="fas fa-shopping-bag mr-2"></i>Articles</h3>
+                            <button type="button" id="add-article-btn" class="bg-[#00853F] text-white px-3 py-1 rounded-full text-sm hover:bg-[#006b32] transition-all">
+                                <i class="fas fa-plus mr-1"></i>Ajouter article
+                            </button>
+                        </div>
+                        
+                        <!-- Conteneur des articles -->
+                        <div id="articles-container" class="space-y-3 mb-3">
+                            <!-- Les articles seront ajoutés ici dynamiquement -->
+                        </div>
+                        
+                        <!-- Total de la commande -->
+                        <div class="total-amount flex justify-between items-center mt-3">
+                            <span>Total commande:</span>
+                            <span id="order-total-display">0 F CFA</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Mode de paiement -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                            <i class="fas fa-user text-[#00853F] mr-2"></i>Nom du client *
+                            <i class="fas fa-credit-card text-[#00853F] mr-2"></i>Mode de paiement
                         </label>
-                        <input type="text" id="customer-name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: Ousmane Diop">
+                        <select id="payment-method" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                            <option value="pending">En attente</option>
+                            <option value="wave">Wave</option>
+                            <option value="orange_money">Orange Money</option>
+                            <option value="free_money">Free Money</option>
+                            <option value="cash">Espèces</option>
+                        </select>
                     </div>
                     
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            <i class="fas fa-phone text-[#00853F] mr-2"></i>Téléphone / WhatsApp *
-                        </label>
-                        <input type="tel" id="customer-phone" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: 77 123 45 67">
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                <i class="fas fa-tag text-[#00853F] mr-2"></i>Catégorie
-                            </label>
-                            <select id="product-category" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
-                                <option value="slimfit">Slim Fit</option>
-                                <option value="compression">Compression</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                <i class="fas fa-palette text-[#00853F] mr-2"></i>Couleur
-                            </label>
-                            <select id="product-color" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
-                                <option value="Blanc">Blanc</option>
-                                <option value="Noir">Noir</option>
-                                <option value="Rouge">Rouge</option>
-                                <option value="Vert">Vert</option>
-                                <option value="Jaune">Jaune</option>
-
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                <i class="fas fa-ruler text-[#00853F] mr-2"></i>Taille
-                            </label>
-                            <select id="product-size" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
-                                <option value="XS">XS</option>
-                                <option value="S">S</option>
-                                <option value="M">M</option>
-                                <option value="L">L</option>
-                                <option value="XL">XL</option>
-                                <option value="XXL">XXL</option>
-                                <option value="XXXL">XXXL</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">
-                                <i class="fas fa-sort-numeric-up text-[#00853F] mr-2"></i>Quantité
-                            </label>
-                            <input type="number" id="product-quantity" min="1" value="1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            <i class="fas fa-money-bill-wave text-[#00853F] mr-2"></i>Prix total (F CFA) *
-                        </label>
-                        <input type="number" id="order-amount" required min="0" step="500" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: 15000">
-                    </div>
-                    
+                    <!-- Statut de la commande -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
                             <i class="fas fa-info-circle text-[#00853F] mr-2"></i>Statut
@@ -390,11 +489,12 @@
                         </select>
                     </div>
                     
+                    <!-- Notes supplémentaires -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">
-                            <i class="fas fa-map-marker-alt text-[#00853F] mr-2"></i>Adresse de livraison
+                            <i class="fas fa-sticky-note text-[#00853F] mr-2"></i>Notes
                         </label>
-                        <textarea id="delivery-address" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: Dakar, Parcelles Assainies..."></textarea>
+                        <textarea id="order-notes" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Instructions particulières..."></textarea>
                     </div>
                     
                     <div class="flex space-x-3 pt-4">
@@ -402,10 +502,71 @@
                             Annuler
                         </button>
                         <button type="submit" class="flex-1 bg-gradient-to-r from-[#00853F] to-[#EF3340] text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all">
-                            Enregistrer
+                            Enregistrer commande
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Modal Ajout Article -->
+        <div id="article-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl w-full max-w-md animate-fade-in-up">
+                <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-[#00853F]">Ajouter un article</h2>
+                    <button class="close-article-modal p-2 hover:bg-gray-100 rounded-full">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+                
+                <div class="p-4 space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                        <select id="article-category" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                            <option value="slimfit">Slim Fit (20 couleurs)</option>
+                            <option value="compression">Compression</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Sélecteur de couleur pour Slim Fit -->
+                    <div id="article-color-container">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Couleur</label>
+                        <div class="color-grid" id="article-color-grid">
+                            <!-- Les 20 couleurs seront injectées ici -->
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Taille</label>
+                            <select id="article-size" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Quantité</label>
+                            <input type="number" id="article-quantity" min="1" value="1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Prix unitaire (F CFA)</label>
+                        <input type="number" id="article-price" value="7500" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                    </div>
+                    
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" class="close-article-modal flex-1 py-3 border border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-all">
+                            Annuler
+                        </button>
+                        <button type="button" id="confirm-add-article" class="flex-1 bg-gradient-to-r from-[#00853F] to-[#EF3340] text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all">
+                            Ajouter l'article
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -429,24 +590,93 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Détails Commande -->
+        <div id="details-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in-up">
+                <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-[#00853F]" id="details-modal-title">Détails de la commande</h2>
+                    <button class="close-details-modal p-2 hover:bg-gray-100 rounded-full">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+                
+                <div class="p-4" id="details-content">
+                    <!-- Les détails seront injectés ici -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Aperçu Client -->
+        <div id="client-preview-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in-up">
+                <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-[#00853F]">Récapitulatif client</h2>
+                    <button class="close-preview-modal p-2 hover:bg-gray-100 rounded-full">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+                <div class="p-4" id="client-preview-content">
+                    <!-- Contenu généré dynamiquement -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Zoom Image -->
+        <div id="image-modal" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
+            <div class="relative max-w-lg w-full">
+                <button class="absolute -top-10 right-0 text-white text-xl close-image-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+                <img id="zoomed-image" src="" alt="Zoom" class="w-full rounded-lg">
+            </div>
+        </div>
     </div>
 
     <script>
-        // Application principale
         (function() {
             // Configuration
             const ADMIN_USERNAME = 'Moussa';
             const ADMIN_PASSWORD = 'senegal2024';
+            
+            // Les 20 couleurs Slim Fit
+            const SLIM_COLORS = [
+                { n: 'Blanc',      h: '#F5F5F5', file: 'slim blanc' },
+                { n: 'Noir',       h: '#111111', file: 'slim noir' },
+                { n: 'Bleu Ciel',  h: '#87CEEB', file: 'slim bleu ciel' },
+                { n: 'Bleu Marine',h: '#1A237E', file: 'slim bleu marine' },
+                { n: 'Bleu Turquoise', h: '#2962FF', file: 'slim turquoise' },
+                { n: 'Vert Foncé', h: '#1B5E20', file: 'slim vert ' },
+                { n: 'Vert Olive', h: '#556B2F', file: 'slim vert mili' },
+                { n: 'Vert Fluo',  h: '#CCFF00', file: 'slim vert fluo' },
+                { n: 'Vert Menthe',h: '#ADEBB3', file: 'slim vert menthe' },
+                { n: 'Jaune',      h: '#FFD600', file: 'slim jaune' },
+                { n: 'Orange',     h: '#FFA726', file: 'slim orange' },
+                { n: 'Rouge',      h: '#C62828', file: 'slim rouge' },
+                { n: 'Bordeaux',   h: '#8E2430', file: 'slim bordeaux' },
+                { n: 'Rose Clair', h: '#F8BBD0', file: 'slim rose clair' },
+                { n: 'Rose Vif',   h: '#FF4081', file: 'slim rose vif' },
+                { n: 'Gris',       h: '#9E9E9E', file: 'slim gris' },
+                { n: 'Marron',     h: '#713600', file: 'slim marron' },
+                { n: 'Beige',      h: '#FFF3E0', file: 'slim beige' },
+                { n: 'Pêche',      h: '#FFCCBC', file: 'slim saumon' },
+                { n: 'Violet',     h: '#7B1FA2', file: 'slim violet' }
+            ];
             
             // État de l'application
             let orders = [];
             let currentFilter = 'all';
             let currentOrderId = null;
             let searchTerm = '';
+            let currentArticles = []; // Articles temporaires pour nouvelle commande
+            let editingArticleIndex = null;
 
             // Initialisation
             document.addEventListener('DOMContentLoaded', function() {
-                // Vérifier si déjà authentifié
+                // Initialiser les grilles de couleurs
+                initColorGrids();
+                
+                // Vérifier authentification
                 if (localStorage.getItem('moussa_auth') === 'true') {
                     showMainApp();
                 } else {
@@ -456,7 +686,7 @@
                 // Charger les commandes
                 loadOrders();
                 
-                // Masquer l'écran de chargement après 1 seconde
+                // Masquer l'écran de chargement
                 setTimeout(() => {
                     document.getElementById('splash-screen').style.opacity = '0';
                     setTimeout(() => {
@@ -464,6 +694,47 @@
                     }, 500);
                 }, 1000);
             });
+
+            // Initialiser toutes les grilles de couleurs
+            function initColorGrids() {
+                // Grille pour le modal principal
+                const mainGrid = document.getElementById('slim-color-grid');
+                if (mainGrid) {
+                    mainGrid.innerHTML = SLIM_COLORS.map((color, index) => `
+                        <div class="color-option ${index === 0 ? 'selected' : ''}" data-color-name="${color.n}" data-color-hex="${color.h}" data-color-file="${color.file}" onclick="selectMainColor(this)">
+                            <span class="color-dot" style="background-color: ${color.h}; border: 2px solid ${color.n === 'Blanc' ? '#ddd' : 'white'};"></span>
+                            <span class="text-xs mt-1 text-center">${color.n}</span>
+                        </div>
+                    `).join('');
+                }
+                
+                // Grille pour le modal article
+                const articleGrid = document.getElementById('article-color-grid');
+                if (articleGrid) {
+                    articleGrid.innerHTML = SLIM_COLORS.map((color, index) => `
+                        <div class="color-option ${index === 0 ? 'selected' : ''}" data-color-name="${color.n}" data-color-hex="${color.h}" data-color-file="${color.file}" onclick="selectArticleColor(this)">
+                            <span class="color-dot" style="background-color: ${color.h}; border: 2px solid ${color.n === 'Blanc' ? '#ddd' : 'white'};"></span>
+                            <span class="text-xs mt-1 text-center">${color.n}</span>
+                        </div>
+                    `).join('');
+                }
+            }
+
+            // Sélectionner couleur dans modal principal
+            window.selectMainColor = function(element) {
+                document.querySelectorAll('#slim-color-grid .color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                element.classList.add('selected');
+            };
+
+            // Sélectionner couleur dans modal article
+            window.selectArticleColor = function(element) {
+                document.querySelectorAll('#article-color-grid .color-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                element.classList.add('selected');
+            };
 
             // Gestion de l'authentification
             document.getElementById('login-form').addEventListener('submit', function(e) {
@@ -474,11 +745,6 @@
                 if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
                     localStorage.setItem('moussa_auth', 'true');
                     showMainApp();
-                    
-                    // Animation de succès
-                    const btn = e.target.querySelector('button[type="submit"]');
-                    btn.innerHTML = '<i class="fas fa-check"></i> Connexion réussie';
-                    btn.classList.add('bg-green-500');
                 } else {
                     alert('Identifiant ou mot de passe incorrect');
                 }
@@ -500,39 +766,83 @@
                 renderOrders();
             }
 
-            // Gestion des commandes avec LocalStorage
+            // Gestion des commandes
             function loadOrders() {
-                const savedOrders = localStorage.getItem('moussa_orders');
+                const savedOrders = localStorage.getItem('moussa_orders_multi');
                 orders = savedOrders ? JSON.parse(savedOrders) : [];
                 
-                // Commandes par défaut si aucune
+                // Ajouter paymentMethod aux anciennes commandes si nécessaire
+                orders = orders.map(o => ({
+                    ...o,
+                    paymentMethod: o.paymentMethod || 'pending'
+                }));
+                
                 if (orders.length === 0) {
+                    // Commande exemple avec plusieurs articles
                     orders = [
                         {
                             id: Date.now() - 1000000,
                             customerName: 'Fatou Diallo',
                             customerPhone: '77 123 45 67',
-                            category: 'slimfit',
-                            color: 'Rouge',
-                            size: 'M',
-                            quantity: 2,
-                            amount: 25000,
-                            status: 'pending',
                             address: 'Dakar, Almadies',
-                            date: new Date(Date.now() - 86400000).toISOString()
+                            status: 'pending',
+                            paymentMethod: 'wave',
+                            notes: 'Appeler avant livraison',
+                            date: new Date(Date.now() - 86400000).toISOString(),
+                            articles: [
+                                {
+                                    category: 'slimfit',
+                                    color: 'Bleu Ciel',
+                                    colorFile: 'bleu_ciel',
+                                    size: 'M',
+                                    quantity: 2,
+                                    price: 7500
+                                },
+                                {
+                                    category: 'slimfit',
+                                    color: 'Rouge',
+                                    colorFile: 'rouge',
+                                    size: 'S',
+                                    quantity: 1,
+                                    price: 7500
+                                },
+                                {
+                                    category: 'compression',
+                                    color: 'Noir',
+                                    colorFile: 'noir',
+                                    size: 'L',
+                                    quantity: 1,
+                                    price: 9000
+                                }
+                            ]
                         },
                         {
                             id: Date.now() - 2000000,
                             customerName: 'Mamadou Ndiaye',
                             customerPhone: '78 987 65 43',
-                            category: 'compression',
-                            color: 'Noir',
-                            size: 'L',
-                            quantity: 1,
-                            amount: 18000,
-                            status: 'delivered',
                             address: 'Thiès, Escale',
-                            date: new Date(Date.now() - 172800000).toISOString()
+                            status: 'delivered',
+                            paymentMethod: 'orange_money',
+                            notes: '',
+                            date: new Date(Date.now() - 172800000).toISOString(),
+                            articles: [
+                                {
+                                    category: 'slimfit',
+                                    color: 'Vert Fluo',
+                                    colorFile: 'vert_fluo',
+                                    size: 'L',
+                                    quantity: 3,
+                                    price: 7500
+                                },
+                                {
+                                    category: 'compression',
+                                    color: 'Bleu Marine',
+                                    colorFile: 'bleu_marine',
+                                    size: 'XL',
+                                    quantity: 2,
+                                    price: 9000
+                                }
+                            ]
                         }
                     ];
                     saveOrders();
@@ -540,42 +850,305 @@
             }
 
             function saveOrders() {
-                localStorage.setItem('moussa_orders', JSON.stringify(orders));
+                localStorage.setItem('moussa_orders_multi', JSON.stringify(orders));
                 updateStats();
                 renderOrders();
             }
 
-            // Mise à jour des statistiques
             function updateStats() {
-                const total = orders.length;
-                const pending = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
-                const revenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+                const totalOrders = orders.length;
+                const totalItems = orders.reduce((sum, order) => 
+                    sum + (order.articles ? order.articles.reduce((s, a) => s + a.quantity, 0) : 0), 0);
+                const revenue = orders.reduce((sum, order) => 
+                    sum + (order.articles ? order.articles.reduce((s, a) => s + (a.price * a.quantity), 0) : 0), 0);
                 
-                document.getElementById('total-orders').textContent = total;
-                document.getElementById('pending-orders').textContent = pending;
+                document.getElementById('total-orders').textContent = totalOrders;
+                document.getElementById('total-items').textContent = totalItems;
                 document.getElementById('total-revenue').textContent = revenue.toLocaleString();
             }
 
-            // Filtrage et recherche
             function getFilteredOrders() {
                 return orders.filter(order => {
-                    // Filtre par catégorie/statut
-                    if (currentFilter === 'slimfit' && order.category !== 'slimfit') return false;
-                    if (currentFilter === 'compression' && order.category !== 'compression') return false;
+                    if (currentFilter === 'slimfit') {
+                        return order.articles.some(a => a.category === 'slimfit');
+                    }
+                    if (currentFilter === 'compression') {
+                        return order.articles.some(a => a.category === 'compression');
+                    }
                     if (currentFilter === 'pending' && order.status !== 'pending' && order.status !== 'processing') return false;
                     if (currentFilter === 'delivered' && order.status !== 'delivered') return false;
                     
-                    // Recherche textuelle
                     if (searchTerm) {
                         const term = searchTerm.toLowerCase();
                         return order.customerName.toLowerCase().includes(term) || 
-                               order.customerPhone.includes(term) ||
-                               (order.address && order.address.toLowerCase().includes(term));
+                               order.customerPhone.includes(term);
                     }
                     
                     return true;
                 }).sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
             }
+
+            function getColorHex(colorName) {
+                const color = SLIM_COLORS.find(c => c.n === colorName);
+                return color ? color.h : '#CCCCCC';
+            }
+
+            function calculateOrderTotal(articles) {
+                return articles.reduce((total, article) => total + (article.price * article.quantity), 0);
+            }
+
+            // Afficher les détails d'une commande
+            window.showOrderDetails = function(orderId) {
+                const order = orders.find(o => o.id == orderId);
+                if (!order) return;
+                
+                const total = calculateOrderTotal(order.articles);
+                const content = document.getElementById('details-content');
+                
+                let articlesHtml = '';
+                order.articles.forEach((article, index) => {
+                    const colorHex = getColorHex(article.color);
+                    const imagePath = article.category === 'slimfit' 
+                        ? `images/slimfits/${article.colorFile || article.color.toLowerCase().replace(/\s+/g, '_')}.webp`
+                        : 'images/compressions/compression_noir.webp';
+                    
+                    articlesHtml += `
+                        <div class="flex items-center space-x-3 p-2 bg-gray-50 rounded-lg mb-2">
+                            <div class="w-12 h-12 rounded-lg overflow-hidden">
+                                <img src="${imagePath}" alt="${article.color}" class="w-full h-full object-cover"
+                                     onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2248%22 height=%2248%22 viewBox=%220 0 48 48%22><rect width=%2248%22 height=%2248%22 fill=%22${encodeURIComponent(colorHex)}%22/></svg>'">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">${article.category === 'slimfit' ? 'Slim Fit' : 'Compression'}</span>
+                                    <span class="text-sm">${article.quantity}x</span>
+                                </div>
+                                <div class="flex justify-between text-sm text-gray-600">
+                                    <span>${article.color} / ${article.size}</span>
+                                    <span>${(article.price * article.quantity).toLocaleString()} F</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                const statusLabels = {
+                    pending: 'En attente',
+                    processing: 'En traitement',
+                    delivered: 'Livré',
+                    cancelled: 'Annulé'
+                };
+                
+                const paymentLabels = {
+                    pending: '⏳ En attente',
+                    wave: '✅ Wave',
+                    orange_money: '✅ Orange Money',
+                    free_money: '✅ Free Money',
+                    cash: '💵 Espèces'
+                };
+                
+                content.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 p-3 rounded-xl">
+                            <h3 class="font-semibold text-[#00853F] mb-2">Client</h3>
+                            <p><i class="fas fa-user mr-2"></i>${order.customerName}</p>
+                            <p><i class="fas fa-phone mr-2"></i>${order.customerPhone}</p>
+                            ${order.address ? `<p><i class="fas fa-map-marker-alt mr-2"></i>${order.address}</p>` : ''}
+                        </div>
+                        
+                        <div class="bg-yellow-50 p-3 rounded-xl">
+                            <h3 class="font-semibold text-[#FCD116] mb-2">Articles (${order.articles.length})</h3>
+                            ${articlesHtml}
+                        </div>
+                        
+                        <div class="bg-green-50 p-3 rounded-xl">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-semibold">Total commande:</span>
+                                <span class="text-xl font-bold text-[#00853F]">${total.toLocaleString()} F CFA</span>
+                            </div>
+                            <div class="flex items-center justify-between text-sm">
+                                <span><i class="fas fa-credit-card mr-1"></i>Paiement:</span>
+                                <span class="px-2 py-1 rounded-full ${order.paymentMethod === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}">
+                                    ${paymentLabels[order.paymentMethod] || '⏳ En attente'}
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="px-3 py-1 rounded-full text-sm ${order.status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                ${statusLabels[order.status] || order.status}
+                            </span>
+                            <span class="text-xs text-gray-500">${new Date(order.date).toLocaleDateString('fr-FR')}</span>
+                        </div>
+                        
+                        ${order.notes ? `
+                            <div class="border-t pt-3">
+                                <p class="text-sm text-gray-600"><i class="fas fa-sticky-note mr-2"></i>${order.notes}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="flex space-x-2 pt-3">
+                            <button onclick="window.editOrder('${order.id}')" class="flex-1 bg-[#00853F] text-white py-2 rounded-xl hover:bg-[#006b32] transition-all">
+                                <i class="fas fa-edit mr-2"></i>Modifier
+                            </button>
+                            <button onclick="window.whatsAppOrder('${order.id}')" class="flex-1 bg-green-600 text-white py-2 rounded-xl hover:bg-green-700 transition-all">
+                                <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                            </button>
+                        </div>
+                        <button onclick="window.showClientPreview('${order.id}')" class="w-full bg-[#FCD116] text-gray-800 py-2 rounded-xl hover:bg-yellow-500 transition-all">
+                            <i class="fas fa-eye mr-2"></i>Aperçu client
+                        </button>
+                    </div>
+                `;
+                
+                document.getElementById('details-modal').classList.remove('hidden');
+            };
+
+            // Envoyer récapitulatif par WhatsApp
+            window.whatsAppOrder = function(orderId) {
+                const order = orders.find(o => o.id == orderId);
+                if (!order) return;
+                
+                const total = calculateOrderTotal(order.articles);
+                const paymentLabels = {
+                    pending: '⏳ En attente de paiement',
+                    wave: '✅ Payé par Wave',
+                    orange_money: '✅ Payé par Orange Money',
+                    free_money: '✅ Payé par Free Money',
+                    cash: '💵 Paiement espèces'
+                };
+                
+                let message = `*🛍️ Commande ${order.customerName}*\n`;
+                message += `📞 ${order.customerPhone}\n\n`;
+                message += `*Articles commandés:*\n`;
+                
+                order.articles.forEach(a => {
+                    const emoji = a.category === 'slimfit' ? '👕' : '💪';
+                    message += `${emoji} *${a.color}* (Taille ${a.size}) x${a.quantity} = ${(a.price * a.quantity).toLocaleString()} F\n`;
+                });
+                
+                message += `\n💰 *Total: ${total.toLocaleString()} F CFA*\n`;
+                message += `💳 *Paiement:* ${paymentLabels[order.paymentMethod] || '⏳ En attente'}\n`;
+                message += `📅 ${new Date(order.date).toLocaleDateString('fr-FR')}\n\n`;
+                message += `_Merci pour votre confiance !_ 🙏`;
+                
+                window.open(`https://wa.me/221${order.customerPhone.replace(/\s/g, '')}?text=${encodeURIComponent(message)}`, '_blank');
+            };
+
+            // Afficher l'aperçu client
+            window.showClientPreview = function(orderId) {
+                const order = orders.find(o => o.id == orderId);
+                if (!order) return;
+
+                const total = calculateOrderTotal(order.articles);
+                
+                // Générer les articles avec photos
+                let articlesHtml = '';
+                order.articles.forEach(article => {
+                    const colorHex = getColorHex(article.color);
+                    const imagePath = article.category === 'slimfit' 
+                        ? `assets/images/slimfits/${article.colorFile || article.color.toLowerCase().replace(/\s+/g, '_')}.webp`
+                        : 'assets/images/compressions/compression_noir.webp';
+                    
+                    articlesHtml += `
+                        <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl mb-2">
+                            <div class="w-16 h-16 rounded-lg overflow-hidden border-2 border-white shadow">
+                                <img src="${imagePath}" alt="${article.color}" class="w-full h-full object-cover"
+                                     onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 fill=%22${encodeURIComponent(colorHex)}%22/><text x=%225%22 y=%2235%22 fill=%22white%22 font-size=%2210%22>${article.color}</text></svg>'">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">${article.category === 'slimfit' ? '👕 Slim Fit' : '💪 Compression'}</span>
+                                    <span class="text-sm bg-${article.category === 'slimfit' ? 'green' : 'red'}-100 px-2 rounded-full">x${article.quantity}</span>
+                                </div>
+                                <div class="flex justify-between text-sm text-gray-600 mt-1">
+                                    <span>Couleur: ${article.color} / Taille: ${article.size}</span>
+                                    <span class="font-semibold">${(article.price * article.quantity).toLocaleString()} F</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // Libellés de paiement
+                const paymentLabels = {
+                    pending: '⏳ En attente de paiement',
+                    wave: '✅ Payé par Wave',
+                    orange_money: '✅ Payé par Orange Money',
+                    free_money: '✅ Payé par Free Money',
+                    cash: '💵 Paiement espèces'
+                };
+                const paymentText = paymentLabels[order.paymentMethod] || '⏳ En attente';
+                const paymentClass = order.paymentMethod === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800';
+
+                const previewHtml = `
+                    <div class="space-y-4">
+                        <!-- En-tête -->
+                        <div class="text-center border-b pb-3">
+                            <h3 class="text-2xl font-bold text-[#00853F]">Moussa Business</h3>
+                            <p class="text-sm text-gray-500">Récapitulatif de votre commande</p>
+                            <div class="flex justify-center space-x-1 mt-2">
+                                <span class="w-8 h-1 bg-[#00853F] rounded-full"></span>
+                                <span class="w-8 h-1 bg-[#FCD116] rounded-full"></span>
+                                <span class="w-8 h-1 bg-[#EF3340] rounded-full"></span>
+                            </div>
+                        </div>
+
+                        <!-- Infos client -->
+                        <div class="bg-blue-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-[#00853F] mb-2">👤 Client</h4>
+                            <p><i class="fas fa-user mr-2 w-5"></i>${order.customerName}</p>
+                            <p><i class="fas fa-phone mr-2 w-5"></i>${order.customerPhone}</p>
+                            ${order.address ? `<p><i class="fas fa-map-marker-alt mr-2 w-5"></i>${order.address}</p>` : ''}
+                            <p class="mt-2"><i class="fas fa-calendar mr-2 w-5"></i>Date: ${new Date(order.date).toLocaleDateString('fr-FR')}</p>
+                        </div>
+
+                        <!-- Articles commandés -->
+                        <div class="bg-yellow-50 p-4 rounded-xl">
+                            <h4 class="font-semibold text-[#FCD116] mb-2">🛍️ Articles commandés</h4>
+                            ${articlesHtml}
+                        </div>
+
+                        <!-- Résumé et paiement -->
+                        <div class="bg-green-50 p-4 rounded-xl">
+                            <div class="flex justify-between items-center text-lg">
+                                <span class="font-bold">Total à payer</span>
+                                <span class="text-2xl font-bold text-[#00853F]">${total.toLocaleString()} F CFA</span>
+                            </div>
+                            <div class="mt-3 pt-3 border-t border-green-200">
+                                <div class="flex items-center">
+                                    <i class="fas fa-credit-card mr-2 text-[#00853F]"></i>
+                                    <span class="font-medium">Paiement :</span>
+                                    <span class="ml-2 px-3 py-1 rounded-full text-sm ${paymentClass}">
+                                        ${paymentText}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Notes -->
+                        ${order.notes ? `
+                            <div class="bg-gray-50 p-3 rounded-xl text-sm">
+                                <i class="fas fa-sticky-note mr-2 text-gray-500"></i>${order.notes}
+                            </div>
+                        ` : ''}
+
+                        <!-- Message de remerciement -->
+                        <div class="text-center text-sm text-gray-500 border-t pt-3">
+                            <p>Merci pour votre confiance !</p>
+                            <p class="text-xs mt-1">Moussa Business - Qualité et style</p>
+                        </div>
+                        
+                        <!-- Note pour capture d'écran -->
+                        <div class="text-center text-xs text-gray-400">
+                            📸 Capturez cet écran pour garder une preuve
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('client-preview-content').innerHTML = previewHtml;
+                document.getElementById('client-preview-modal').classList.remove('hidden');
+            };
 
             // Rendu des commandes
             function renderOrders() {
@@ -606,102 +1179,175 @@
                         cancelled: 'Annulé'
                     };
                     
-                    const categoryIcon = order.category === 'slimfit' ? 'fa-tshirt' : 'fa-compress-alt';
-                    const categoryColor = order.category === 'slimfit' ? 'text-[#00853F]' : 'text-[#EF3340]';
+                    const totalItems = order.articles.reduce((sum, a) => sum + a.quantity, 0);
+                    const totalAmount = calculateOrderTotal(order.articles);
+                    
+                    // Aperçu des premiers articles
+                    const previewArticles = order.articles.slice(0, 3);
+                    const remainingCount = order.articles.length - 3;
                     
                     return `
-                        <div class="order-card bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 ${order.status === 'delivered' ? 'border-green-500' : 'border-[#FCD116]'} animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+                        <div class="order-card bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 ${order.status === 'delivered' ? 'border-green-500' : 'border-[#FCD116]'} animate-fade-in-up cursor-pointer" style="animation-delay: ${index * 0.1}s" onclick="showOrderDetails('${order.id}')">
                             <div class="flex justify-between items-start mb-2">
-                                <div class="flex items-center space-x-2">
-                                    <i class="fas ${categoryIcon} ${categoryColor}"></i>
+                                <div>
                                     <h3 class="font-semibold text-gray-800">${order.customerName}</h3>
+                                    <p class="text-xs text-gray-500"><i class="fas fa-phone mr-1"></i>${order.customerPhone}</p>
                                 </div>
                                 <span class="px-2 py-1 text-xs rounded-full ${statusColors[order.status] || 'bg-gray-100'}">
                                     ${statusLabels[order.status] || order.status}
                                 </span>
                             </div>
                             
-                            <div class="grid grid-cols-2 gap-2 text-sm mb-3">
-                                <div>
-                                    <i class="fas fa-phone text-[#00853F] mr-1 text-xs"></i>
-                                    <span>${order.customerPhone}</span>
-                                </div>
-                                <div>
-                                    <i class="fas fa-tag text-[#00853F] mr-1 text-xs"></i>
-                                    <span>${order.color || 'N/A'} / ${order.size || 'M'}</span>
-                                </div>
-                                <div>
-                                    <i class="fas fa-sort-numeric-up text-[#00853F] mr-1 text-xs"></i>
-                                    <span>Qte: ${order.quantity || 1}</span>
-                                </div>
-                                <div>
-                                    <i class="fas fa-money-bill-wave text-[#00853F] mr-1 text-xs"></i>
-                                    <span class="font-semibold">${(order.amount || 0).toLocaleString()} F</span>
-                                </div>
+                            <!-- Miniatures des articles -->
+                            <div class="flex items-center space-x-1 mb-3">
+                                ${previewArticles.map(article => {
+                                    const colorHex = getColorHex(article.color);
+                                    const imagePath = article.category === 'slimfit' 
+                                        ? `assets/images/slimfits/${article.colorFile || article.color.toLowerCase().replace(/\s+/g, '_')}.webp`
+                                        : 'assets/images/compressions/compression_noir.webp';
+                                    return `
+                                        <div class="w-8 h-8 rounded-lg overflow-hidden border-2 border-white shadow-sm" title="${article.color} - ${article.size} (x${article.quantity})">
+                                            <img src="${imagePath}" 
+                                                 alt="${article.color}" 
+                                                 class="w-full h-full object-cover"
+                                                 onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2232%22 height=%2232%22 viewBox=%220 0 32 32%22><rect width=%2232%22 height=%2232%22 fill=%22${encodeURIComponent(colorHex)}%22/></svg>'">
+                                        </div>
+                                    `;
+                                }).join('')}
+                                ${remainingCount > 0 ? `
+                                    <div class="w-8 h-8 rounded-lg bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-600">
+                                        +${remainingCount}
+                                    </div>
+                                ` : ''}
+                                <span class="ml-auto text-sm font-semibold text-[#00853F]">
+                                    ${totalAmount.toLocaleString()} F
+                                </span>
                             </div>
                             
-                            ${order.address ? `
-                                <div class="text-xs text-gray-500 mb-3">
-                                    <i class="fas fa-map-marker-alt text-[#00853F] mr-1"></i>
-                                    ${order.address.substring(0, 30)}${order.address.length > 30 ? '...' : ''}
-                                </div>
-                            ` : ''}
-                            
-                            <div class="flex justify-end space-x-2 pt-2 border-t border-gray-100">
-                                <button onclick="window.whatsAppContact('${order.customerPhone}')" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-all">
-                                    <i class="fab fa-whatsapp"></i>
-                                </button>
-                                <button onclick="window.editOrder('${order.id}')" class="p-2 text-[#00853F] hover:bg-blue-50 rounded-lg transition-all">
-                                    <i class="fas fa-edit"></i>
-                                </button>
-                                <button onclick="window.deleteOrder('${order.id}')" class="p-2 text-[#EF3340] hover:bg-red-50 rounded-lg transition-all">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
+                            <div class="flex justify-between items-center text-xs text-gray-500">
+                                <span><i class="fas fa-box mr-1"></i>${totalItems} article${totalItems > 1 ? 's' : ''}</span>
+                                <span>${new Date(order.date).toLocaleDateString('fr-FR')}</span>
                             </div>
                         </div>
                     `;
                 }).join('');
             }
 
-            // Fonctions globales pour les événements onclick
-            window.whatsAppContact = function(phone) {
-                const formattedPhone = phone.replace(/\s/g, '');
-                window.open(`https://wa.me/221${formattedPhone}`, '_blank');
-            };
-
-            window.editOrder = function(id) {
-                const order = orders.find(o => o.id == id);
-                if (order) {
-                    currentOrderId = id;
-                    document.getElementById('modal-title').textContent = 'Modifier commande';
-                    document.getElementById('order-id').value = id;
-                    document.getElementById('customer-name').value = order.customerName || '';
-                    document.getElementById('customer-phone').value = order.customerPhone || '';
-                    document.getElementById('product-category').value = order.category || 'slimfit';
-                    document.getElementById('product-color').value = order.color || 'Blanc';
-                    document.getElementById('product-size').value = order.size || 'M';
-                    document.getElementById('product-quantity').value = order.quantity || 1;
-                    document.getElementById('order-amount').value = order.amount || 0;
-                    document.getElementById('order-status').value = order.status || 'pending';
-                    document.getElementById('delivery-address').value = order.address || '';
-                    
-                    document.getElementById('order-modal').classList.remove('hidden');
+            // Gestion des articles dans le formulaire
+            function renderArticlesList() {
+                const container = document.getElementById('articles-container');
+                if (!container) return;
+                
+                if (currentArticles.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-4 text-gray-500">
+                            <i class="fas fa-box-open text-3xl mb-2"></i>
+                            <p class="text-sm">Aucun article ajouté</p>
+                        </div>
+                    `;
+                    document.getElementById('order-total-display').textContent = '0 F CFA';
+                    return;
                 }
+                
+                container.innerHTML = currentArticles.map((article, index) => {
+                    const colorHex = getColorHex(article.color);
+                    return `
+                        <div class="article-item">
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-center space-x-2">
+                                    <span class="category-badge ${article.category === 'slimfit' ? 'badge-slimfit' : 'badge-compression'}">
+                                        ${article.category === 'slimfit' ? 'SLIM' : 'COMP'}
+                                    </span>
+                                    <span class="color-dot" style="background-color: ${colorHex};"></span>
+                                </div>
+                                <button type="button" class="remove-article" onclick="removeArticle(${index})">
+                                    <i class="fas fa-times-circle"></i>
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 mt-2 text-sm">
+                                <div><span class="text-gray-500">Couleur:</span> ${article.color}</div>
+                                <div><span class="text-gray-500">Taille:</span> ${article.size}</div>
+                                <div><span class="text-gray-500">Qté:</span> ${article.quantity}</div>
+                                <div><span class="text-gray-500">Prix:</span> ${(article.price * article.quantity).toLocaleString()} F</div>
+                            </div>
+                            <div class="text-right text-xs text-gray-400 mt-1">
+                                ${article.price.toLocaleString()} F × ${article.quantity}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                const total = calculateOrderTotal(currentArticles);
+                document.getElementById('order-total-display').textContent = total.toLocaleString() + ' F CFA';
+            }
+
+            // Ajouter un article
+            document.getElementById('add-article-btn').addEventListener('click', function() {
+                editingArticleIndex = null;
+                document.getElementById('article-category').value = 'slimfit';
+                document.getElementById('article-size').value = 'M';
+                document.getElementById('article-quantity').value = '1';
+                document.getElementById('article-price').value = '7500';
+                
+                // Réinitialiser la sélection de couleur
+                document.querySelectorAll('#article-color-grid .color-option').forEach((el, idx) => {
+                    if (idx === 0) el.classList.add('selected');
+                    else el.classList.remove('selected');
+                });
+                
+                document.getElementById('article-modal').classList.remove('hidden');
+            });
+
+            // Confirmer l'ajout d'article
+            document.getElementById('confirm-add-article').addEventListener('click', function() {
+                const category = document.getElementById('article-category').value;
+                const selectedColor = document.querySelector('#article-color-grid .color-option.selected');
+                
+                if (!selectedColor && category === 'slimfit') {
+                    alert('Veuillez sélectionner une couleur');
+                    return;
+                }
+                
+                const article = {
+                    category: category,
+                    color: selectedColor ? selectedColor.dataset.colorName : 'Noir',
+                    colorFile: selectedColor ? selectedColor.dataset.colorFile : 'noir',
+                    size: document.getElementById('article-size').value,
+                    quantity: parseInt(document.getElementById('article-quantity').value) || 1,
+                    price: parseInt(document.getElementById('article-price').value) || 7500
+                };
+                
+                if (editingArticleIndex !== null) {
+                    currentArticles[editingArticleIndex] = article;
+                } else {
+                    currentArticles.push(article);
+                }
+                
+                renderArticlesList();
+                document.getElementById('article-modal').classList.add('hidden');
+            });
+
+            // Supprimer un article
+            window.removeArticle = function(index) {
+                currentArticles.splice(index, 1);
+                renderArticlesList();
             };
 
-            window.deleteOrder = function(id) {
-                currentOrderId = id;
-                document.getElementById('delete-modal').classList.remove('hidden');
-            };
-
-            // Gestionnaires d'événements
-            document.getElementById('add-order-btn').addEventListener('click', function() {
-                currentOrderId = null;
-                document.getElementById('modal-title').textContent = 'Nouvelle commande';
+            // Réinitialiser le formulaire de commande
+            function resetOrderForm() {
                 document.getElementById('order-form').reset();
                 document.getElementById('order-id').value = '';
                 document.getElementById('order-status').value = 'pending';
-                document.getElementById('product-quantity').value = '1';
+                document.getElementById('payment-method').value = 'pending';
+                document.getElementById('order-notes').value = '';
+                currentArticles = [];
+                renderArticlesList();
+            }
+
+            // Nouvelle commande
+            document.getElementById('add-order-btn').addEventListener('click', function() {
+                resetOrderForm();
+                document.getElementById('modal-title').textContent = 'Nouvelle commande multi-articles';
                 document.getElementById('order-modal').classList.remove('hidden');
             });
 
@@ -709,48 +1355,77 @@
                 document.getElementById('add-order-btn').click();
             });
 
-            // Fermeture des modals
-            document.querySelectorAll('.close-modal').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    document.getElementById('order-modal').classList.add('hidden');
-                    document.getElementById('delete-modal').classList.add('hidden');
-                });
-            });
+            // Éditer une commande
+            window.editOrder = function(id) {
+                const order = orders.find(o => o.id == id);
+                if (!order) return;
+                
+                currentOrderId = id;
+                document.getElementById('modal-title').textContent = 'Modifier commande';
+                document.getElementById('order-id').value = id;
+                document.getElementById('customer-name').value = order.customerName || '';
+                document.getElementById('customer-phone').value = order.customerPhone || '';
+                document.getElementById('delivery-address').value = order.address || '';
+                document.getElementById('order-status').value = order.status || 'pending';
+                document.getElementById('payment-method').value = order.paymentMethod || 'pending';
+                document.getElementById('order-notes').value = order.notes || '';
+                
+                // Charger les articles
+                currentArticles = order.articles ? [...order.articles] : [];
+                renderArticlesList();
+                
+                document.getElementById('order-modal').classList.remove('hidden');
+                document.getElementById('details-modal').classList.add('hidden');
+            };
+
+            // Supprimer une commande
+            window.deleteOrder = function(id) {
+                currentOrderId = id;
+                document.getElementById('delete-modal').classList.remove('hidden');
+                document.getElementById('details-modal').classList.add('hidden');
+            };
 
             // Soumission formulaire commande
             document.getElementById('order-form').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                if (currentArticles.length === 0) {
+                    alert('Veuillez ajouter au moins un article à la commande');
+                    return;
+                }
+                
+                const customerName = document.getElementById('customer-name').value;
+                const customerPhone = document.getElementById('customer-phone').value;
+                
+                if (!customerName || !customerPhone) {
+                    alert('Veuillez remplir les informations client');
+                    return;
+                }
+                
                 const orderData = {
                     id: currentOrderId || Date.now(),
-                    customerName: document.getElementById('customer-name').value,
-                    customerPhone: document.getElementById('customer-phone').value,
-                    category: document.getElementById('product-category').value,
-                    color: document.getElementById('product-color').value,
-                    size: document.getElementById('product-size').value,
-                    quantity: parseInt(document.getElementById('product-quantity').value) || 1,
-                    amount: parseInt(document.getElementById('order-amount').value) || 0,
-                    status: document.getElementById('order-status').value,
+                    customerName: customerName,
+                    customerPhone: customerPhone,
                     address: document.getElementById('delivery-address').value,
-                    date: new Date().toISOString()
+                    status: document.getElementById('order-status').value,
+                    paymentMethod: document.getElementById('payment-method').value,
+                    notes: document.getElementById('order-notes').value,
+                    date: new Date().toISOString(),
+                    articles: [...currentArticles]
                 };
                 
                 if (currentOrderId) {
-                    // Modification
                     const index = orders.findIndex(o => o.id == currentOrderId);
                     if (index !== -1) {
                         orders[index] = {...orders[index], ...orderData};
                     }
                 } else {
-                    // Ajout
                     orders.unshift(orderData);
                 }
                 
                 saveOrders();
                 document.getElementById('order-modal').classList.add('hidden');
-                
-                // Animation de confirmation
-                showNotification('Commande enregistrée avec succès', 'success');
+                showNotification('Commande enregistrée', 'success');
             });
 
             // Confirmation suppression
@@ -761,6 +1436,38 @@
                     document.getElementById('delete-modal').classList.add('hidden');
                     showNotification('Commande supprimée', 'warning');
                 }
+            });
+
+            // Fermeture des modals
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('order-modal').classList.add('hidden');
+                    document.getElementById('delete-modal').classList.add('hidden');
+                });
+            });
+
+            document.querySelectorAll('.close-article-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('article-modal').classList.add('hidden');
+                });
+            });
+
+            document.querySelectorAll('.close-details-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('details-modal').classList.add('hidden');
+                });
+            });
+
+            document.querySelectorAll('.close-preview-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('client-preview-modal').classList.add('hidden');
+                });
+            });
+
+            document.querySelectorAll('.close-image-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('image-modal').classList.add('hidden');
+                });
             });
 
             // Recherche
@@ -785,7 +1492,7 @@
                 });
             });
 
-            // Navigation tabs
+            // Navigation
             document.querySelectorAll('.nav-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     document.querySelectorAll('.nav-btn').forEach(b => {
@@ -802,13 +1509,12 @@
                     } else if (tab === 'compression') {
                         currentFilter = 'compression';
                     } else if (tab === 'stats') {
-                        currentFilter = 'all';
-                        showStats();
+                        showStatistics();
+                        return;
                     } else {
                         currentFilter = 'all';
                     }
                     
-                    // Mettre à jour le bouton de filtre correspondant
                     document.querySelectorAll('.filter-btn').forEach(btn => {
                         if (btn.dataset.filter === currentFilter) {
                             btn.click();
@@ -817,70 +1523,130 @@
                 });
             });
 
-            // Rafraîchir
-            document.getElementById('refresh-btn').addEventListener('click', function() {
-                loadOrders();
-                renderOrders();
-                showNotification('Données actualisées', 'info');
-            });
-
-            // Fonction pour afficher les statistiques
-            function showStats() {
+            // Afficher les statistiques
+            function showStatistics() {
                 const container = document.getElementById('orders-list');
-                const total = orders.length;
-                const slimfit = orders.filter(o => o.category === 'slimfit').length;
-                const compression = orders.filter(o => o.category === 'compression').length;
-                const delivered = orders.filter(o => o.status === 'delivered').length;
-                const pending = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
-                const revenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+                
+                const totalOrders = orders.length;
+                const totalItems = orders.reduce((sum, order) => 
+                    sum + (order.articles ? order.articles.reduce((s, a) => s + a.quantity, 0) : 0), 0);
+                const revenue = orders.reduce((sum, order) => 
+                    sum + (order.articles ? order.articles.reduce((s, a) => s + (a.price * a.quantity), 0) : 0), 0);
+                
+                const slimfitItems = orders.reduce((sum, order) => 
+                    sum + (order.articles ? order.articles.filter(a => a.category === 'slimfit').reduce((s, a) => s + a.quantity, 0) : 0), 0);
+                
+                const compressionItems = orders.reduce((sum, order) => 
+                    sum + (order.articles ? order.articles.filter(a => a.category === 'compression').reduce((s, a) => s + a.quantity, 0) : 0), 0);
+                
+                const deliveredOrders = orders.filter(o => o.status === 'delivered').length;
+                const pendingOrders = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+                
+                // Paiements
+                const wavePayments = orders.filter(o => o.paymentMethod === 'wave').length;
+                const orangePayments = orders.filter(o => o.paymentMethod === 'orange_money').length;
+                const cashPayments = orders.filter(o => o.paymentMethod === 'cash').length;
+                
+                // Statistiques par couleur
+                const colorStats = {};
+                orders.forEach(order => {
+                    order.articles.forEach(article => {
+                        if (article.category === 'slimfit') {
+                            colorStats[article.color] = (colorStats[article.color] || 0) + article.quantity;
+                        }
+                    });
+                });
+                
+                const topColors = Object.entries(colorStats)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 5);
                 
                 container.innerHTML = `
                     <div class="bg-white rounded-xl p-6 shadow-md animate-fade-in-up">
                         <h3 class="text-lg font-bold text-[#00853F] mb-4">Statistiques détaillées</h3>
                         
                         <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span>Total commandes</span>
-                                    <span class="font-bold">${total}</span>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-blue-50 p-3 rounded-lg">
+                                    <p class="text-xs text-gray-600">Commandes</p>
+                                    <p class="text-2xl font-bold text-[#00853F]">${totalOrders}</p>
                                 </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-[#00853F] h-2 rounded-full" style="width: 100%"></div>
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span><i class="fas fa-tshirt text-[#00853F] mr-1"></i>Slim Fit</span>
-                                    <span class="font-bold">${slimfit}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-[#00853F] h-2 rounded-full" style="width: ${total ? (slimfit/total*100) : 0}%"></div>
+                                <div class="bg-green-50 p-3 rounded-lg">
+                                    <p class="text-xs text-gray-600">Articles</p>
+                                    <p class="text-2xl font-bold text-[#00853F]">${totalItems}</p>
                                 </div>
                             </div>
                             
-                            <div>
-                                <div class="flex justify-between text-sm mb-1">
-                                    <span><i class="fas fa-compress-alt text-[#EF3340] mr-1"></i>Compression</span>
-                                    <span class="font-bold">${compression}</span>
-                                </div>
-                                <div class="w-full bg-gray-200 rounded-full h-2">
-                                    <div class="bg-[#EF3340] h-2 rounded-full" style="width: ${total ? (compression/total*100) : 0}%"></div>
+                            <div class="border-t pt-4">
+                                <h4 class="font-semibold mb-2">Répartition par catégorie</h4>
+                                <div class="space-y-2">
+                                    <div>
+                                        <div class="flex justify-between text-sm">
+                                            <span><i class="fas fa-tshirt text-[#00853F] mr-1"></i>Slim Fit</span>
+                                            <span class="font-bold">${slimfitItems}</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-[#00853F] h-2 rounded-full" style="width: ${totalItems ? (slimfitItems/totalItems*100) : 0}%"></div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="flex justify-between text-sm">
+                                            <span><i class="fas fa-compress-alt text-[#EF3340] mr-1"></i>Compression</span>
+                                            <span class="font-bold">${compressionItems}</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2">
+                                            <div class="bg-[#EF3340] h-2 rounded-full" style="width: ${totalItems ? (compressionItems/totalItems*100) : 0}%"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div class="pt-4 border-t border-gray-200">
-                                <div class="flex justify-between">
-                                    <span class="text-gray-600">Livrées</span>
-                                    <span class="font-bold text-green-600">${delivered}</span>
+                            <div class="border-t pt-4">
+                                <h4 class="font-semibold mb-2">Moyens de paiement</h4>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="bg-green-50 p-2 rounded text-center">
+                                        <span class="text-sm">Wave</span>
+                                        <p class="font-bold">${wavePayments}</p>
+                                    </div>
+                                    <div class="bg-orange-50 p-2 rounded text-center">
+                                        <span class="text-sm">Orange</span>
+                                        <p class="font-bold">${orangePayments}</p>
+                                    </div>
+                                    <div class="bg-gray-50 p-2 rounded text-center">
+                                        <span class="text-sm">Espèces</span>
+                                        <p class="font-bold">${cashPayments}</p>
+                                    </div>
                                 </div>
-                                <div class="flex justify-between mt-2">
-                                    <span class="text-gray-600">En attente</span>
-                                    <span class="font-bold text-yellow-600">${pending}</span>
-                                </div>
-                                <div class="flex justify-between mt-2 text-lg">
-                                    <span class="text-gray-600">Chiffre d'affaires</span>
+                            </div>
+                            
+                            <div class="border-t pt-4">
+                                <h4 class="font-semibold mb-2">Top 5 couleurs Slim Fit</h4>
+                                ${topColors.length > 0 ? topColors.map(([color, count]) => {
+                                    const colorHex = getColorHex(color);
+                                    return `
+                                        <div class="flex items-center justify-between py-1">
+                                            <div class="flex items-center">
+                                                <span class="color-dot mr-2" style="background-color: ${colorHex};"></span>
+                                                <span>${color}</span>
+                                            </div>
+                                            <span class="font-bold">${count}</span>
+                                        </div>
+                                    `;
+                                }).join('') : '<p class="text-gray-500 text-sm">Aucune donnée</p>'}
+                            </div>
+                            
+                            <div class="border-t pt-4">
+                                <div class="flex justify-between text-lg">
+                                    <span class="font-semibold">Chiffre d'affaires</span>
                                     <span class="font-bold text-[#00853F]">${revenue.toLocaleString()} F</span>
+                                </div>
+                                <div class="flex justify-between mt-2 text-sm">
+                                    <span class="text-gray-600">Commandes livrées</span>
+                                    <span class="font-bold text-green-600">${deliveredOrders}</span>
+                                </div>
+                                <div class="flex justify-between mt-1 text-sm">
+                                    <span class="text-gray-600">En attente</span>
+                                    <span class="font-bold text-yellow-600">${pendingOrders}</span>
                                 </div>
                             </div>
                         </div>
@@ -888,7 +1654,14 @@
                 `;
             }
 
-            // Notification toast
+            // Rafraîchir
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                loadOrders();
+                renderOrders();
+                showNotification('Données actualisées', 'info');
+            });
+
+            // Notification
             function showNotification(message, type = 'info') {
                 const notification = document.createElement('div');
                 notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded-xl shadow-lg text-white text-sm animate-fade-in-up ${
@@ -906,33 +1679,54 @@
                 }, 2000);
             }
 
-            // Empêcher la fermeture du modal en cliquant à l'extérieur (optionnel)
+            // Zoom image
+            window.zoomImage = function(src) {
+                document.getElementById('zoomed-image').src = src;
+                document.getElementById('image-modal').classList.remove('hidden');
+            };
+
+            // Fermeture modals en cliquant à l'extérieur
             document.getElementById('order-modal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.add('hidden');
-                }
+                if (e.target === this) this.classList.add('hidden');
+            });
+            
+            document.getElementById('article-modal').addEventListener('click', function(e) {
+                if (e.target === this) this.classList.add('hidden');
             });
             
             document.getElementById('delete-modal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.add('hidden');
-                }
+                if (e.target === this) this.classList.add('hidden');
             });
 
-            // Sauvegarder lors de la fermeture de l'onglet (optionnel)
-            window.addEventListener('beforeunload', function() {
-                // Déjà sauvegardé automatiquement
+            document.getElementById('details-modal').addEventListener('click', function(e) {
+                if (e.target === this) this.classList.add('hidden');
+            });
+
+            document.getElementById('client-preview-modal').addEventListener('click', function(e) {
+                if (e.target === this) this.classList.add('hidden');
+            });
+
+            document.getElementById('image-modal').addEventListener('click', function(e) {
+                if (e.target === this) this.classList.add('hidden');
+            });
+
+            // Changer l'affichage selon la catégorie dans le modal article
+            document.getElementById('article-category').addEventListener('change', function(e) {
+                const container = document.getElementById('article-color-container');
+                if (e.target.value === 'slimfit') {
+                    container.style.display = 'block';
+                } else {
+                    container.style.display = 'none';
+                }
             });
         })();
     </script>
 
-    <!-- Service Worker pour PWA -->
+    <!-- Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                console.log('ServiceWorker enregistré avec succès');
-            }).catch(function(err) {
-                console.log('Échec enregistrement ServiceWorker: ', err);
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('ServiceWorker registration failed: ', err);
             });
         }
     </script>
