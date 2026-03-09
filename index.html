@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>Moussa Business Manager</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 6 (gratuit) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Manifest PWA -->
+    <link rel="manifest" href="/manifest.json">
+    <!-- Theme color pour iOS -->
+    <meta name="theme-color" content="#00853F">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        /* Animations personnalisées */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .animate-slide-in-right {
+            animation: slideInRight 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 2s infinite;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Scrollbar personnalisée */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #00853F;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #006b32;
+        }
+        
+        /* Style pour les inputs */
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            ring: 2px solid #FCD116;
+            border-color: #EF3340;
+        }
+        
+        /* Animation de chargement */
+        .loading-spinner {
+            border: 3px solid rgba(0, 133, 63, 0.1);
+            border-radius: 50%;
+            border-top: 3px solid #FCD116;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Transitions fluides */
+        .page-transition {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        
+        /* Style pour iPhone */
+        .safe-area-bottom {
+            padding-bottom: env(safe-area-inset-bottom, 1rem);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans antialiased min-h-screen">
+    <!-- Écran de chargement -->
+    <div id="splash-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center transition-opacity duration-500">
+        <div class="text-center">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-[#00853F] font-semibold">Moussa Business Manager</p>
+            <p class="text-sm text-gray-500 mt-2">Chargement...</p>
+        </div>
+    </div>
+
+    <!-- Conteneur principal -->
+    <div class="max-w-md mx-auto bg-white min-h-screen relative shadow-xl" id="app-container">
+        <!-- Écran de connexion -->
+        <div id="login-screen" class="p-6 min-h-screen flex flex-col justify-center bg-gradient-to-br from-[#00853F] via-[#FCD116] to-[#EF3340]">
+            <div class="bg-white/95 backdrop-blur-lg rounded-3xl p-8 shadow-2xl animate-fade-in-up">
+                <div class="text-center mb-8">
+                    <i class="fas fa-tshirt text-5xl text-[#EF3340] mb-3"></i>
+                    <h1 class="text-2xl font-bold text-[#00853F]">Moussa Business</h1>
+                    <p class="text-gray-600 text-sm mt-1">Manager Pro</p>
+                    <div class="flex justify-center space-x-2 mt-3">
+                        <span class="w-8 h-1 bg-[#00853F] rounded-full"></span>
+                        <span class="w-8 h-1 bg-[#FCD116] rounded-full"></span>
+                        <span class="w-8 h-1 bg-[#EF3340] rounded-full"></span>
+                    </div>
+                </div>
+                
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-user text-[#00853F] mr-2"></i>Identifiant
+                        </label>
+                        <input type="text" id="username" value="Moussa" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340] transition-all" placeholder="Votre identifiant" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-lock text-[#00853F] mr-2"></i>Mot de passe
+                        </label>
+                        <input type="password" id="password" value="senegal2024" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340] transition-all" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="w-full bg-gradient-to-r from-[#00853F] to-[#EF3340] text-white py-3 rounded-xl font-semibold text-lg hover:shadow-lg transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center space-x-2">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Se connecter</span>
+                    </button>
+                </form>
+                
+                <div class="mt-4 text-center text-xs text-gray-500">
+                    <i class="fas fa-shield-alt text-[#00853F] mr-1"></i> Accès privé - Administrateur uniquement
+                </div>
+            </div>
+            
+            <!-- Drapeau Sénégal décoratif -->
+            <div class="flex justify-center mt-6 space-x-1 opacity-50">
+                <div class="w-6 h-6 bg-[#00853F] rounded-l-full"></div>
+                <div class="w-6 h-6 bg-[#FCD116]"></div>
+                <div class="w-6 h-6 bg-[#EF3340] rounded-r-full"></div>
+            </div>
+        </div>
+
+        <!-- Application principale (cachée au départ) -->
+        <div id="main-app" class="hidden min-h-screen bg-gray-50">
+            <!-- Header avec couleurs du Sénégal -->
+            <div class="sticky top-0 z-10 glass-effect border-b border-gray-200 safe-area-bottom">
+                <div class="flex items-center justify-between p-4">
+                    <div class="flex items-center space-x-2">
+                        <i class="fas fa-tshirt text-2xl text-[#EF3340]"></i>
+                        <div>
+                            <h1 class="text-xl font-bold text-[#00853F]">Moussa Biz</h1>
+                            <p class="text-xs text-gray-500">Manager</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button id="refresh-btn" class="p-2 hover:bg-gray-100 rounded-full transition-all">
+                            <i class="fas fa-sync-alt text-[#00853F]"></i>
+                        </button>
+                        <button id="logout-btn" class="p-2 hover:bg-gray-100 rounded-full transition-all">
+                            <i class="fas fa-sign-out-alt text-[#EF3340]"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Barre de progression des couleurs -->
+                <div class="h-1 w-full flex">
+                    <div class="w-1/3 h-full bg-[#00853F]"></div>
+                    <div class="w-1/3 h-full bg-[#FCD116]"></div>
+                    <div class="w-1/3 h-full bg-[#EF3340]"></div>
+                </div>
+            </div>
+
+            <!-- Contenu principal avec padding pour le header fixe -->
+            <div class="p-4 pb-24" id="main-content">
+                <!-- Section Stats -->
+                <div class="grid grid-cols-3 gap-3 mb-6 animate-fade-in-up">
+                    <div class="bg-white rounded-xl p-3 shadow-md card-hover border-l-4 border-[#00853F]">
+                        <p class="text-xs text-gray-500">Total</p>
+                        <p class="text-xl font-bold text-[#00853F]" id="total-orders">0</p>
+                        <p class="text-xs text-gray-400">commandes</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-3 shadow-md card-hover border-l-4 border-[#FCD116]">
+                        <p class="text-xs text-gray-500">En cours</p>
+                        <p class="text-xl font-bold text-[#FCD116]" id="pending-orders">0</p>
+                        <p class="text-xs text-gray-400">livraison</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-3 shadow-md card-hover border-l-4 border-[#EF3340]">
+                        <p class="text-xs text-gray-500">Chiffre</p>
+                        <p class="text-xl font-bold text-[#EF3340]" id="total-revenue">0</p>
+                        <p class="text-xs text-gray-400">F CFA</p>
+                    </div>
+                </div>
+
+                <!-- Barre de recherche et ajout -->
+                <div class="flex space-x-2 mb-6 animate-slide-in-right">
+                    <div class="flex-1 relative">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                        <input type="text" id="search-input" placeholder="Rechercher une commande..." class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340] transition-all bg-white shadow-sm">
+                    </div>
+                    <button id="add-order-btn" class="bg-gradient-to-r from-[#00853F] to-[#EF3340] text-white px-4 rounded-xl shadow-md hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <!-- Filtres par catégorie -->
+                <div class="flex space-x-2 mb-4 overflow-x-auto pb-2 scrollbar-hide">
+                    <button class="filter-btn active px-4 py-2 bg-[#00853F] text-white rounded-full text-sm whitespace-nowrap" data-filter="all">Tous</button>
+                    <button class="filter-btn px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap border border-gray-200" data-filter="slimfit">
+                        <i class="fas fa-tshirt mr-1 text-[#00853F]"></i>Slim Fit
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap border border-gray-200" data-filter="compression">
+                        <i class="fas fa-compress-alt mr-1 text-[#EF3340]"></i>Compression
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap border border-gray-200" data-filter="pending">En attente</button>
+                    <button class="filter-btn px-4 py-2 bg-white text-gray-700 rounded-full text-sm whitespace-nowrap border border-gray-200" data-filter="delivered">Livrées</button>
+                </div>
+
+                <!-- Liste des commandes -->
+                <div id="orders-list" class="space-y-3">
+                    <!-- Les commandes seront injectées ici par JavaScript -->
+                </div>
+
+                <!-- Message si aucune commande -->
+                <div id="no-orders-message" class="hidden text-center py-10">
+                    <i class="fas fa-box-open text-5xl text-gray-300 mb-3"></i>
+                    <p class="text-gray-500">Aucune commande trouvée</p>
+                    <button id="empty-add-btn" class="mt-3 text-[#00853F] font-semibold">
+                        <i class="fas fa-plus-circle mr-1"></i>Ajouter une commande
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto glass-effect border-t border-gray-200 safe-area-bottom">
+                <div class="flex justify-around p-2">
+                    <button class="nav-btn active p-3 rounded-xl text-[#00853F]" data-tab="dashboard">
+                        <i class="fas fa-home text-xl"></i>
+                        <span class="text-xs block">Accueil</span>
+                    </button>
+                    <button class="nav-btn p-3 rounded-xl text-gray-500" data-tab="slimfit">
+                        <i class="fas fa-tshirt text-xl"></i>
+                        <span class="text-xs block">Slim Fit</span>
+                    </button>
+                    <button class="nav-btn p-3 rounded-xl text-gray-500" data-tab="compression">
+                        <i class="fas fa-compress-alt text-xl"></i>
+                        <span class="text-xs block">Compression</span>
+                    </button>
+                    <button class="nav-btn p-3 rounded-xl text-gray-500" data-tab="stats">
+                        <i class="fas fa-chart-pie text-xl"></i>
+                        <span class="text-xs block">Stats</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Ajout/Modification Commande -->
+        <div id="order-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-fade-in-up">
+                <div class="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-[#00853F]" id="modal-title">Nouvelle commande</h2>
+                    <button class="close-modal p-2 hover:bg-gray-100 rounded-full">
+                        <i class="fas fa-times text-gray-500"></i>
+                    </button>
+                </div>
+                
+                <form id="order-form" class="p-4 space-y-4">
+                    <input type="hidden" id="order-id">
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-user text-[#00853F] mr-2"></i>Nom du client *
+                        </label>
+                        <input type="text" id="customer-name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: Ousmane Diop">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-phone text-[#00853F] mr-2"></i>Téléphone / WhatsApp *
+                        </label>
+                        <input type="tel" id="customer-phone" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: 77 123 45 67">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-tag text-[#00853F] mr-2"></i>Catégorie
+                            </label>
+                            <select id="product-category" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                                <option value="slimfit">Slim Fit</option>
+                                <option value="compression">Compression</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-palette text-[#00853F] mr-2"></i>Couleur
+                            </label>
+                            <select id="product-color" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                                <option value="Blanc">Blanc</option>
+                                <option value="Noir">Noir</option>
+                                <option value="Rouge">Rouge</option>
+                                <option value="Vert">Vert</option>
+                                <option value="Jaune">Jaune</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-ruler text-[#00853F] mr-2"></i>Taille
+                            </label>
+                            <select id="product-size" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <i class="fas fa-sort-numeric-up text-[#00853F] mr-2"></i>Quantité
+                            </label>
+                            <input type="number" id="product-quantity" min="1" value="1" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-money-bill-wave text-[#00853F] mr-2"></i>Prix total (F CFA) *
+                        </label>
+                        <input type="number" id="order-amount" required min="0" step="500" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: 15000">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-info-circle text-[#00853F] mr-2"></i>Statut
+                        </label>
+                        <select id="order-status" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]">
+                            <option value="pending">En attente</option>
+                            <option value="processing">En traitement</option>
+                            <option value="delivered">Livré</option>
+                            <option value="cancelled">Annulé</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-map-marker-alt text-[#00853F] mr-2"></i>Adresse de livraison
+                        </label>
+                        <textarea id="delivery-address" rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#FCD116] focus:border-[#EF3340]" placeholder="Ex: Dakar, Parcelles Assainies..."></textarea>
+                    </div>
+                    
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" class="close-modal flex-1 py-3 border border-gray-300 rounded-xl text-gray-700 font-semibold hover:bg-gray-50 transition-all">
+                            Annuler
+                        </button>
+                        <button type="submit" class="flex-1 bg-gradient-to-r from-[#00853F] to-[#EF3340] text-white py-3 rounded-xl font-semibold hover:shadow-lg transform hover:scale-[1.02] transition-all">
+                            Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal Confirmation suppression -->
+        <div id="delete-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl p-6 max-w-sm w-full animate-fade-in-up">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-trash-alt text-3xl text-[#EF3340]"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Supprimer la commande ?</h3>
+                    <p class="text-gray-500 mb-6">Cette action est irréversible.</p>
+                    <div class="flex space-x-3">
+                        <button class="close-modal flex-1 py-3 border border-gray-300 rounded-xl text-gray-700 font-semibold">
+                            Annuler
+                        </button>
+                        <button id="confirm-delete" class="flex-1 bg-[#EF3340] text-white py-3 rounded-xl font-semibold hover:bg-red-700 transition-all">
+                            Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application principale
+        (function() {
+            // Configuration
+            const ADMIN_USERNAME = 'Moussa';
+            const ADMIN_PASSWORD = 'senegal2024';
+            
+            // État de l'application
+            let orders = [];
+            let currentFilter = 'all';
+            let currentOrderId = null;
+            let searchTerm = '';
+
+            // Initialisation
+            document.addEventListener('DOMContentLoaded', function() {
+                // Vérifier si déjà authentifié
+                if (localStorage.getItem('moussa_auth') === 'true') {
+                    showMainApp();
+                } else {
+                    showLoginScreen();
+                }
+                
+                // Charger les commandes
+                loadOrders();
+                
+                // Masquer l'écran de chargement après 1 seconde
+                setTimeout(() => {
+                    document.getElementById('splash-screen').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('splash-screen').style.display = 'none';
+                    }, 500);
+                }, 1000);
+            });
+
+            // Gestion de l'authentification
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                    localStorage.setItem('moussa_auth', 'true');
+                    showMainApp();
+                    
+                    // Animation de succès
+                    const btn = e.target.querySelector('button[type="submit"]');
+                    btn.innerHTML = '<i class="fas fa-check"></i> Connexion réussie';
+                    btn.classList.add('bg-green-500');
+                } else {
+                    alert('Identifiant ou mot de passe incorrect');
+                }
+            });
+
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('moussa_auth');
+                showLoginScreen();
+            });
+
+            function showLoginScreen() {
+                document.getElementById('login-screen').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+            }
+
+            function showMainApp() {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                renderOrders();
+            }
+
+            // Gestion des commandes avec LocalStorage
+            function loadOrders() {
+                const savedOrders = localStorage.getItem('moussa_orders');
+                orders = savedOrders ? JSON.parse(savedOrders) : [];
+                
+                // Commandes par défaut si aucune
+                if (orders.length === 0) {
+                    orders = [
+                        {
+                            id: Date.now() - 1000000,
+                            customerName: 'Fatou Diallo',
+                            customerPhone: '77 123 45 67',
+                            category: 'slimfit',
+                            color: 'Rouge',
+                            size: 'M',
+                            quantity: 2,
+                            amount: 25000,
+                            status: 'pending',
+                            address: 'Dakar, Almadies',
+                            date: new Date(Date.now() - 86400000).toISOString()
+                        },
+                        {
+                            id: Date.now() - 2000000,
+                            customerName: 'Mamadou Ndiaye',
+                            customerPhone: '78 987 65 43',
+                            category: 'compression',
+                            color: 'Noir',
+                            size: 'L',
+                            quantity: 1,
+                            amount: 18000,
+                            status: 'delivered',
+                            address: 'Thiès, Escale',
+                            date: new Date(Date.now() - 172800000).toISOString()
+                        }
+                    ];
+                    saveOrders();
+                }
+            }
+
+            function saveOrders() {
+                localStorage.setItem('moussa_orders', JSON.stringify(orders));
+                updateStats();
+                renderOrders();
+            }
+
+            // Mise à jour des statistiques
+            function updateStats() {
+                const total = orders.length;
+                const pending = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+                const revenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+                
+                document.getElementById('total-orders').textContent = total;
+                document.getElementById('pending-orders').textContent = pending;
+                document.getElementById('total-revenue').textContent = revenue.toLocaleString();
+            }
+
+            // Filtrage et recherche
+            function getFilteredOrders() {
+                return orders.filter(order => {
+                    // Filtre par catégorie/statut
+                    if (currentFilter === 'slimfit' && order.category !== 'slimfit') return false;
+                    if (currentFilter === 'compression' && order.category !== 'compression') return false;
+                    if (currentFilter === 'pending' && order.status !== 'pending' && order.status !== 'processing') return false;
+                    if (currentFilter === 'delivered' && order.status !== 'delivered') return false;
+                    
+                    // Recherche textuelle
+                    if (searchTerm) {
+                        const term = searchTerm.toLowerCase();
+                        return order.customerName.toLowerCase().includes(term) || 
+                               order.customerPhone.includes(term) ||
+                               (order.address && order.address.toLowerCase().includes(term));
+                    }
+                    
+                    return true;
+                }).sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+            }
+
+            // Rendu des commandes
+            function renderOrders() {
+                const container = document.getElementById('orders-list');
+                const noOrdersMsg = document.getElementById('no-orders-message');
+                const filtered = getFilteredOrders();
+                
+                if (filtered.length === 0) {
+                    container.innerHTML = '';
+                    noOrdersMsg.classList.remove('hidden');
+                    return;
+                }
+                
+                noOrdersMsg.classList.add('hidden');
+                
+                container.innerHTML = filtered.map((order, index) => {
+                    const statusColors = {
+                        pending: 'bg-yellow-100 text-yellow-800',
+                        processing: 'bg-blue-100 text-blue-800',
+                        delivered: 'bg-green-100 text-green-800',
+                        cancelled: 'bg-red-100 text-red-800'
+                    };
+                    
+                    const statusLabels = {
+                        pending: 'En attente',
+                        processing: 'En traitement',
+                        delivered: 'Livré',
+                        cancelled: 'Annulé'
+                    };
+                    
+                    const categoryIcon = order.category === 'slimfit' ? 'fa-tshirt' : 'fa-compress-alt';
+                    const categoryColor = order.category === 'slimfit' ? 'text-[#00853F]' : 'text-[#EF3340]';
+                    
+                    return `
+                        <div class="order-card bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all duration-300 border-l-4 ${order.status === 'delivered' ? 'border-green-500' : 'border-[#FCD116]'} animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas ${categoryIcon} ${categoryColor}"></i>
+                                    <h3 class="font-semibold text-gray-800">${order.customerName}</h3>
+                                </div>
+                                <span class="px-2 py-1 text-xs rounded-full ${statusColors[order.status] || 'bg-gray-100'}">
+                                    ${statusLabels[order.status] || order.status}
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                                <div>
+                                    <i class="fas fa-phone text-[#00853F] mr-1 text-xs"></i>
+                                    <span>${order.customerPhone}</span>
+                                </div>
+                                <div>
+                                    <i class="fas fa-tag text-[#00853F] mr-1 text-xs"></i>
+                                    <span>${order.color || 'N/A'} / ${order.size || 'M'}</span>
+                                </div>
+                                <div>
+                                    <i class="fas fa-sort-numeric-up text-[#00853F] mr-1 text-xs"></i>
+                                    <span>Qte: ${order.quantity || 1}</span>
+                                </div>
+                                <div>
+                                    <i class="fas fa-money-bill-wave text-[#00853F] mr-1 text-xs"></i>
+                                    <span class="font-semibold">${(order.amount || 0).toLocaleString()} F</span>
+                                </div>
+                            </div>
+                            
+                            ${order.address ? `
+                                <div class="text-xs text-gray-500 mb-3">
+                                    <i class="fas fa-map-marker-alt text-[#00853F] mr-1"></i>
+                                    ${order.address.substring(0, 30)}${order.address.length > 30 ? '...' : ''}
+                                </div>
+                            ` : ''}
+                            
+                            <div class="flex justify-end space-x-2 pt-2 border-t border-gray-100">
+                                <button onclick="window.whatsAppContact('${order.customerPhone}')" class="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-all">
+                                    <i class="fab fa-whatsapp"></i>
+                                </button>
+                                <button onclick="window.editOrder('${order.id}')" class="p-2 text-[#00853F] hover:bg-blue-50 rounded-lg transition-all">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="window.deleteOrder('${order.id}')" class="p-2 text-[#EF3340] hover:bg-red-50 rounded-lg transition-all">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Fonctions globales pour les événements onclick
+            window.whatsAppContact = function(phone) {
+                const formattedPhone = phone.replace(/\s/g, '');
+                window.open(`https://wa.me/221${formattedPhone}`, '_blank');
+            };
+
+            window.editOrder = function(id) {
+                const order = orders.find(o => o.id == id);
+                if (order) {
+                    currentOrderId = id;
+                    document.getElementById('modal-title').textContent = 'Modifier commande';
+                    document.getElementById('order-id').value = id;
+                    document.getElementById('customer-name').value = order.customerName || '';
+                    document.getElementById('customer-phone').value = order.customerPhone || '';
+                    document.getElementById('product-category').value = order.category || 'slimfit';
+                    document.getElementById('product-color').value = order.color || 'Blanc';
+                    document.getElementById('product-size').value = order.size || 'M';
+                    document.getElementById('product-quantity').value = order.quantity || 1;
+                    document.getElementById('order-amount').value = order.amount || 0;
+                    document.getElementById('order-status').value = order.status || 'pending';
+                    document.getElementById('delivery-address').value = order.address || '';
+                    
+                    document.getElementById('order-modal').classList.remove('hidden');
+                }
+            };
+
+            window.deleteOrder = function(id) {
+                currentOrderId = id;
+                document.getElementById('delete-modal').classList.remove('hidden');
+            };
+
+            // Gestionnaires d'événements
+            document.getElementById('add-order-btn').addEventListener('click', function() {
+                currentOrderId = null;
+                document.getElementById('modal-title').textContent = 'Nouvelle commande';
+                document.getElementById('order-form').reset();
+                document.getElementById('order-id').value = '';
+                document.getElementById('order-status').value = 'pending';
+                document.getElementById('product-quantity').value = '1';
+                document.getElementById('order-modal').classList.remove('hidden');
+            });
+
+            document.getElementById('empty-add-btn').addEventListener('click', function() {
+                document.getElementById('add-order-btn').click();
+            });
+
+            // Fermeture des modals
+            document.querySelectorAll('.close-modal').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.getElementById('order-modal').classList.add('hidden');
+                    document.getElementById('delete-modal').classList.add('hidden');
+                });
+            });
+
+            // Soumission formulaire commande
+            document.getElementById('order-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const orderData = {
+                    id: currentOrderId || Date.now(),
+                    customerName: document.getElementById('customer-name').value,
+                    customerPhone: document.getElementById('customer-phone').value,
+                    category: document.getElementById('product-category').value,
+                    color: document.getElementById('product-color').value,
+                    size: document.getElementById('product-size').value,
+                    quantity: parseInt(document.getElementById('product-quantity').value) || 1,
+                    amount: parseInt(document.getElementById('order-amount').value) || 0,
+                    status: document.getElementById('order-status').value,
+                    address: document.getElementById('delivery-address').value,
+                    date: new Date().toISOString()
+                };
+                
+                if (currentOrderId) {
+                    // Modification
+                    const index = orders.findIndex(o => o.id == currentOrderId);
+                    if (index !== -1) {
+                        orders[index] = {...orders[index], ...orderData};
+                    }
+                } else {
+                    // Ajout
+                    orders.unshift(orderData);
+                }
+                
+                saveOrders();
+                document.getElementById('order-modal').classList.add('hidden');
+                
+                // Animation de confirmation
+                showNotification('Commande enregistrée avec succès', 'success');
+            });
+
+            // Confirmation suppression
+            document.getElementById('confirm-delete').addEventListener('click', function() {
+                if (currentOrderId) {
+                    orders = orders.filter(o => o.id != currentOrderId);
+                    saveOrders();
+                    document.getElementById('delete-modal').classList.add('hidden');
+                    showNotification('Commande supprimée', 'warning');
+                }
+            });
+
+            // Recherche
+            document.getElementById('search-input').addEventListener('input', function(e) {
+                searchTerm = e.target.value;
+                renderOrders();
+            });
+
+            // Filtres
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-[#00853F]', 'text-white');
+                        b.classList.add('bg-white', 'text-gray-700', 'border');
+                    });
+                    
+                    this.classList.add('active', 'bg-[#00853F]', 'text-white');
+                    this.classList.remove('bg-white', 'text-gray-700', 'border');
+                    
+                    currentFilter = this.dataset.filter;
+                    renderOrders();
+                });
+            });
+
+            // Navigation tabs
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-btn').forEach(b => {
+                        b.classList.remove('active', 'text-[#00853F]');
+                        b.classList.add('text-gray-500');
+                    });
+                    
+                    this.classList.add('active', 'text-[#00853F]');
+                    this.classList.remove('text-gray-500');
+                    
+                    const tab = this.dataset.tab;
+                    if (tab === 'slimfit') {
+                        currentFilter = 'slimfit';
+                    } else if (tab === 'compression') {
+                        currentFilter = 'compression';
+                    } else if (tab === 'stats') {
+                        currentFilter = 'all';
+                        showStats();
+                    } else {
+                        currentFilter = 'all';
+                    }
+                    
+                    // Mettre à jour le bouton de filtre correspondant
+                    document.querySelectorAll('.filter-btn').forEach(btn => {
+                        if (btn.dataset.filter === currentFilter) {
+                            btn.click();
+                        }
+                    });
+                });
+            });
+
+            // Rafraîchir
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                loadOrders();
+                renderOrders();
+                showNotification('Données actualisées', 'info');
+            });
+
+            // Fonction pour afficher les statistiques
+            function showStats() {
+                const container = document.getElementById('orders-list');
+                const total = orders.length;
+                const slimfit = orders.filter(o => o.category === 'slimfit').length;
+                const compression = orders.filter(o => o.category === 'compression').length;
+                const delivered = orders.filter(o => o.status === 'delivered').length;
+                const pending = orders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+                const revenue = orders.reduce((sum, o) => sum + (o.amount || 0), 0);
+                
+                container.innerHTML = `
+                    <div class="bg-white rounded-xl p-6 shadow-md animate-fade-in-up">
+                        <h3 class="text-lg font-bold text-[#00853F] mb-4">Statistiques détaillées</h3>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span>Total commandes</span>
+                                    <span class="font-bold">${total}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-[#00853F] h-2 rounded-full" style="width: 100%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span><i class="fas fa-tshirt text-[#00853F] mr-1"></i>Slim Fit</span>
+                                    <span class="font-bold">${slimfit}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-[#00853F] h-2 rounded-full" style="width: ${total ? (slimfit/total*100) : 0}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span><i class="fas fa-compress-alt text-[#EF3340] mr-1"></i>Compression</span>
+                                    <span class="font-bold">${compression}</span>
+                                </div>
+                                <div class="w-full bg-gray-200 rounded-full h-2">
+                                    <div class="bg-[#EF3340] h-2 rounded-full" style="width: ${total ? (compression/total*100) : 0}%"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="pt-4 border-t border-gray-200">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">Livrées</span>
+                                    <span class="font-bold text-green-600">${delivered}</span>
+                                </div>
+                                <div class="flex justify-between mt-2">
+                                    <span class="text-gray-600">En attente</span>
+                                    <span class="font-bold text-yellow-600">${pending}</span>
+                                </div>
+                                <div class="flex justify-between mt-2 text-lg">
+                                    <span class="text-gray-600">Chiffre d'affaires</span>
+                                    <span class="font-bold text-[#00853F]">${revenue.toLocaleString()} F</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Notification toast
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded-xl shadow-lg text-white text-sm animate-fade-in-up ${
+                    type === 'success' ? 'bg-green-500' : type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+                }`;
+                notification.innerHTML = `<i class="fas ${
+                    type === 'success' ? 'fa-check-circle' : type === 'warning' ? 'fa-exclamation-triangle' : 'fa-info-circle'
+                } mr-2"></i>${message}`;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    setTimeout(() => notification.remove(), 300);
+                }, 2000);
+            }
+
+            // Empêcher la fermeture du modal en cliquant à l'extérieur (optionnel)
+            document.getElementById('order-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.add('hidden');
+                }
+            });
+            
+            document.getElementById('delete-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.add('hidden');
+                }
+            });
+
+            // Sauvegarder lors de la fermeture de l'onglet (optionnel)
+            window.addEventListener('beforeunload', function() {
+                // Déjà sauvegardé automatiquement
+            });
+        })();
+    </script>
+
+    <!-- Service Worker pour PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                console.log('ServiceWorker enregistré avec succès');
+            }).catch(function(err) {
+                console.log('Échec enregistrement ServiceWorker: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
